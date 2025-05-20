@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Thesis Coach - Platform Pendamping Riset & Penulisan Akademik</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4ade80;
+            --warning: #fbbf24;
+            --danger: #f87171;
+            --gray: #6c757d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+        
+        .logo-icon {
+            background-color: var(--primary);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+        
+        .main-content {
+            margin-top: 80px;
+            padding: 2rem 0;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 2rem;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            background-color: #f0f4ff;
+            padding: 1.5rem 1rem;
+            height: calc(100vh - 130px);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            margin-top: 2rem;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            color: var(--dark);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+        
+        .sidebar-menu i {
+            font-size: 1.25rem;
+        }
+        
+        .content-area {
+            padding: 2rem;
+            overflow-y: auto;
+            height: calc(100vh - 130px);
+        }
+        
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        .welcome-banner h1 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .progress-wrapper {
+            margin-top: 1.5rem;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            position: absolute;
+            height: 100%;
+            width: 35%;
+            background-color: white;
+            border-radius: 5px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .feature-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e9ecef;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background-color: rgba(67, 97, 238, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+            color: var(--dark);
+        }
+        
+        .feature-card p {
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+        
+        .chat-interface {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e9ecef;
+            overflow: hidden;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            height: 500px;
+        }
+        
+        .chat-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .chat-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .chat-title h3 {
+            font-weight: 600;
+        }
+        
+        .chat-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .chat-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--gray);
+            transition: color 0.3s ease;
+        }
+        
+        .chat-actions button:hover {
+            color: var(--primary);
+        }
+        
+        .chat-messages {
+            padding: 1.5rem;
+            overflow-y: auto;
+            height: 100%;
+        }
+        
+        .message {
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .ai-avatar {
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+        
+        .message-content {
+            flex: 1;
+        }
+        
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .message-sender {
+            font-weight: 600;
+        }
+        
+        .message-time {
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+        
+        .message-text {
+            background-color: #f0f4ff;
+            padding: 1rem;
+            border-radius: 12px;
+            border-top-left-radius: 0;
+            color: var(--dark);
+        }
+        
+        .message.ai .message-text {
+            background-color: var(--light);
+            border-top-left-radius: 12px;
+            border-top-right-radius: 0;
+        }
+        
+        .chat-input {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .input-wrapper {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .input-wrapper input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .send-btn {
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .send-btn:hover {
+            background-color: var(--secondary);
+        }
+        
+        .upcoming-tasks {
+            background-color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e9ecef;
+            margin-top: 2rem;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .view-all {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .task-list {
+            list-style: none;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .task-item:last-child {
+            border-bottom: none;
+        }
+        
+        .task-status {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 1rem;
+        }
+        
+        .status-pending {
+            background-color: var(--warning);
+        }
+        
+        .status-completed {
+            background-color: var(--success);
+        }
+        
+        .task-info {
+            flex: 1;
+        }
+        
+        .task-info h4 {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+        
+        .task-meta {
+            display: flex;
+            gap: 1rem;
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+        
+        .task-date {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .task-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .task-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--gray);
+            transition: color 0.3s ease;
+        }
+        
+        .task-actions button:hover {
+            color: var(--primary);
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e9ecef;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--gray);
+            position: relative;
+        }
+        
+        .tab.active {
+            color: var(--primary);
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary);
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">AI</div>
+                    <span>Thesis Coach</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#" class="active">Beranda</a></li>
+                        <li><a href="#">Fitur</a></li>
+                        <li><a href="#">Harga</a></li>
+                        <li><a href="#">Testimoni</a></li>
+                        <li><a href="#">Bantuan</a></li>
+                    </ul>
+                </nav>
+                <div class="auth-buttons">
+                    <button class="btn btn-outline">Masuk</button>
+                    <button class="btn btn-primary">Daftar</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="dashboard">
+                <div class="sidebar">
+                    <div class="logo">
+                        <div class="logo-icon">AI</div>
+                        <span>Thesis Coach</span>
+                    </div>
+                    <ul class="sidebar-menu">
+                        <li><a href="#" class="active">
+                            <i>📊</i>
+                            <span>Dashboard</span>
+                        </a></li>
+                        <li><a href="#">
+                            <i>📝</i>
+                            <span>Penulisan</span>
+                        </a></li>
+                        <li><a href="#">
+                            <i>📚</i>
+                            <span>Literatur</span>
+                        </a></li>
+                        <li><a href="#">
+                            <i>📋</i>
+                            <span>Metodologi</span>
+                        </a></li>
+                        <li><a href="#">
+                            <i>💬</i>
+                            <span>Simulasi Q&A</span>
+                        </a></li>
+                        <li><a href="#">
+                            <i>🧠</i>
+                            <span>Prompt Engineering</span>
+                        </a></li>
+                        <li><a href="#">
+                            <i>⏱️</i>
+                            <span>Progress & Timeline</span>
+                        </a></li>
+                        <li><a href="#">
+                            <i>⚙️</i>
+                            <span>Pengaturan</span>
+                        </a></li>
+                    </ul>
+                </div>
+                <div class="content-area">
+                    <div class="welcome-banner">
+                        <h1>Selamat datang, Mahasiswa!</h1>
+                        <p>Penelitian Anda: "Analisis Pengaruh Teknologi AI terhadap Produktivitas Akademisi"</p>
+                        <div class="progress-wrapper">
+                            <div class="progress-label">
+                                <span>Progress Penelitian</span>
+                                <span>35%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tabs">
+                        <div class="tab active" data-tab="features">Fitur Utama</div>
+                        <div class="tab" data-tab="chat">AI Thesis Coach Assistant</div>
+                        <div class="tab" data-tab="tasks">Tugas & Jadwal</div>
+                    </div>
+
+                    <div id="features-tab" class="tab-content">
+                        <div class="features-grid">
+                            <div class="feature-card">
+                                <div class="feature-icon">📝</div>
+                                <h3>Pendamping Penulisan</h3>
+                                <p>Perbaiki tata bahasa, gaya penulisan, dan kurangi plagiasi dalam penelitian Anda.</p>
+                                <button class="btn btn-outline">Mulai Menulis</button>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">📚</div>
+                                <h3>Rekomendasi Literatur</h3>
+                                <p>Dapatkan referensi jurnal dan artikel ilmiah terbaru sesuai topik penelitian Anda.</p>
+                                <button class="btn btn-outline">Cari Literatur</button>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">📋</div>
+                                <h3>Penyusunan Kerangka</h3>
+                                <p>Template dan saran struktur proposal, rumusan masalah, tujuan, dan metodologi.</p>
+                                <button class="btn btn-outline">Buat Kerangka</button>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">💬</div>
+                                <h3>Simulasi Tanya Jawab</h3>
+                                <p>Latihan interaktif berbasis AI untuk persiapan seminar, sidang, atau presentasi.</p>
+                                <button class="btn btn-outline">Mulai Simulasi</button>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">🧠</div>
+                                <h3>Pelatihan Prompt</h3>
+                                <p>Belajar menyusun prompt AI yang efektif untuk hasil riset dan penulisan optimal.</p>
+                                <button class="btn btn-outline">Ikut Pelatihan</button>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">⏱️</div>
+                                <h3>Dashboard Progress</h3>
+                                <p>Pantau timeline penelitian dan dapatkan pengingat tahap-tahap penting.</p>
+                                <button class="btn btn-outline">Lihat Progress</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="chat-tab" class="tab-content hidden">
+                        <div class="chat-interface">
+                            <div class="chat-header">
+                                <div class="chat-title">
+                                    <div class="message-avatar ai-avatar">AI</div>
+                                    <h3>AI Thesis Coach Assistant</h3>
+                                </div>
+                                <div class="chat-actions">
+                                    <button>📋</button>
+                                    <button>🔍</button>
+                                    <button>⚙️</button>
+                                </div>
+                            </div>
+                            <div class="chat-messages">
+                                <div class="message ai">
+                                    <div class="message-avatar ai-avatar">AI</div>
+                                    <div class="message-content">
+                                        <div class="message-header">
+                                            <span class="message-sender">AI Thesis Coach</span>
+                                            <span class="message-time">10:30</span>
+                                        </div>
+                                        <div class="message-text">
+                                            Selamat datang di AI Thesis Coach! Saya siap membantu penelitian Anda tentang "Analisis Pengaruh Teknologi AI terhadap Produktivitas Akademisi". Apa yang bisa saya bantu hari ini?
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="message">
+                                    <div class="message-avatar">U</div>
+                                    <div class="message-content">
+                                        <div class="message-header">
+                                            <span class="message-sender">User</span>
+                                            <span class="message-time">10:32</span>
+                                        </div>
+                                        <div class="message-text">
+                                            Saya kesulitan mencari referensi jurnal terbaru tentang AI dan produktivitas akademisi. Bisa bantu berikan beberapa rekomendasi?
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="message ai">
+                                    <div class="message-avatar ai-avatar">AI</div>
+                                    <div class="message-content">
+                                        <div class="message-header">
+                                            <span class="message-sender">AI Thesis Coach</span>
+                                            <span class="message-time">10:33</span>
+                                        </div>
+                                        <div class="message-text">
+                                            Tentu! Berikut beberapa jurnal terbaru (2023-2024) yang relevan dengan topik Anda:<br><br>
+                                            1. "Artificial Intelligence in Higher Education: Impact on Academic Productivity" (Journal of Educational Technology, 2024)<br>
+                                            2. "AI Tools and Academic Research: A Meta-Analysis" (Digital Scholarship Quarterly, 2023)<br>
+                                            3. "Measuring Productivity Gains from AI in Academic Settings" (International Journal of AI in Education, 2023)<br><br>
+                                            Saya juga menemukan artikel dari Scopus tentang penggunaan AI di kalangan dosen. Apakah Anda ingin saya menganalisis tren dari literatur-literatur ini?
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-input">
+                                <div class="input-wrapper">
+                                    <input type="text" placeholder="Tulis pesan Anda di sini...">
+                                    <button class="send-btn">Kirim</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tasks-tab" class="tab-content hidden">
+                        <div class="upcoming-tasks">
+                            <div class="section-header">
+                                <h2>Jadwal & Tugas Mendatang</h2>
+                                <a href="#" class="view-all">Lihat Semua</a>
+                            </div>
+                            <ul class="task-list">
+                                <li class="task-item">
+                                    <div class="task-status status-pending"></div>
+                                    <div class="task-info">
+                                        <h4>Menyelesaikan Bab 2: Tinjauan Pustaka</h4>
+                                        <div class="task-meta">
+                                            <div class="task-date">
+                                                <span>📅</span>
+                                                <span>28 Mei 2025</span>
+                                            </div>
+                                            <div class="task-date">
+                                                <span>⏱️</span>
+                                                <span>8 hari lagi</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="task-actions">
+                                        <button>✏️</button>
+                                        <button>✓</button>
+                                    </div>
+                                </li>
+                                <li class="task-item">
+                                    <div class="task-status status-completed"></div>
+                                    <div class="task-info">
+                                        <h4>Revisi Proposal Penelitian</h4>
+                                        <div class="task-meta">
+                                            <div class="task-date">
+                                                <span>📅</span>
+                                                <span>15 Mei 2025</span>
+                                            </div>
+                                            <div class="task-date">
+                                                <span>✓</span>
+                                                <span>Selesai</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="task-actions">
+                                        <button>📋</button>
+                                    </div>
+                                </li>
+                                <li class="task-item">
+                                    <div class="task-status status-pending"></div>
+                                    <div class="task-info">
+                                        <h4>Menyusun Instrumen Penelitian</h4>
+                                        <div class="task-meta">
+                                            <div class="task-date">
+                                                <span>📅</span>
+                                                <span>5 Juni 2025</span>
+                                            </div>
+                                            <div class="task-date">
+                                                <span>⏱️</span>
+                                                <span>16 hari lagi</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="task-actions">
+                                        <button>✏️</button>
+                                        <button>✓</button>
+                                    </div>
+                                </li>
+                                <li class="task-item">
+                                    <div class="task-status status-pending"></div>
+                                    <div class="task-info">
+                                        <h4>Konsultasi dengan Pembimbing</h4>
+                                        <div class="task-meta">
+                                            <div class="task-date">
+                                                <span>📅</span>
+                                                <span>1 Juni 2025</span>
+                                            </div>
+                                            <div class="task-date">
+                                                <span>⏱️</span>
+                                                <span>12 hari lagi</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="task-actions">
+                                        <button>✏️</button>
+                                        <button>✓</button>
+                                    </div>
+                                </li>
+                                <li class="task-item">
+                                    <div class="task-status status-pending"></div>
+                                    <div class="task-info">
+                                        <h4>Pelatihan Prompt Engineering untuk Riset</h4>
+                                        <div class="task-meta">
+                                            <div class="task-date">
+                                                <span>📅</span>
+                                                <span>3 Juni 2025</span>
+                                            </div>
+                                            <div class="task-date">
+                                                <span>⏱️</span>
+                                                <span>14 hari lagi</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="task-actions">
+                                        <button>✏️</button>
+                                        <button>✓</button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple tab navigation
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetTab = tab.getAttribute('data-tab');
+                
+                // Remove active class from all tabs
+                tabs.forEach(t => t.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                
+                // Hide all tab contents
+                tabContents.forEach(content => {
+                    content.classList.add('hidden');
+                });
+                
+                // Show target tab content
+                document.getElementById(`${targetTab}-tab`).classList.remove('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
